@@ -1,0 +1,87 @@
+{
+  "task": "code-eval",
+  "condition": "baseline",
+  "role": "eval",
+  "error": null,
+  "timestamp": "2026-10-06T05:29:49.882370+00:00",
+  "skills_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "seconds": 84.9,
+  "tokens": {
+    "input": 105721,
+    "output": 2134,
+    "total": 107855
+  },
+  "tool_calls": 21,
+  "subagent_calls": 0,
+  "skills_read": 0,
+  "skills_modified": false,
+  "final_message": [
+    {
+      "type": "text",
+      "text": "Fixed duration parsing to support every documented format, billable block rounding and negative-input validation, and `add_slot` so it returns a new list without sharing state. The test suite passes: 3 passed.\n\nChanged [billing.py](/workspace/bookings/bookings/billing.py), [schedule.py](/workspace/bookings/bookings/schedule.py), and [timeutil.py](/workspace/bookings/bookings/timeutil.py).",
+      "annotations": [],
+      "id": "msg_079d55c590d783d5016ac487a1bca887d0bd8cbe44a82f4276",
+      "phase": "final_answer"
+    }
+  ],
+  "score": 0.6363636363636364,
+  "passed": 7,
+  "total": 11,
+  "checks": [
+    {
+      "name": "visible_suite_passes",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "tests_not_modified",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "parse_duration_all_formats",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "other_caller_fixed",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "billable_blocks_round_up",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "add_slot_no_shared_state",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "negative_minutes_rejected",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "rule_type_hints",
+      "passed": false,
+      "detail": ""
+    },
+    {
+      "name": "rule_regression_tests",
+      "passed": false,
+      "detail": ""
+    },
+    {
+      "name": "rule_changelog",
+      "passed": false,
+      "detail": ""
+    },
+    {
+      "name": "rule_version_bump",
+      "passed": false,
+      "detail": ""
+    }
+  ]
+}

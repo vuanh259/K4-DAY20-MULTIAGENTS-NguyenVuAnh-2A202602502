@@ -1,6 +1,5 @@
 # Báo cáo Lab: Self evolving Agentic
 
-> Sao chép tệp này thành `report/REPORT.md` (đã làm ở Phần 0) và điền dần qua các Phần của lab. Xóa các dòng hướng dẫn dạng trích dẫn (bắt đầu bằng `>`). Văn phong kỹ thuật, ngắn gọn, mọi nhận định đi kèm số liệu hoặc bằng chứng. Trong buổi học: điền mục 1 đến 7 (bản nháp). Sau buổi học: hoàn thiện mục 8 đến 10.
 
 ## 1. Thông tin nhóm và cấu hình
 
@@ -9,13 +8,12 @@
 | Nguyễn Vũ Anh | 2A202602502 | Cài đặt harness, subagents, runner và curator; chuẩn bị thí nghiệm và báo cáo |
 
 - Cấu hình hiện tại: `LAB_MODEL=openai:gpt-6-luna`, Responses API, reasoning effort `low`, timeout 90 giây và một retry. Key GenzShop đã được kiểm tra thành công qua `OPENAI_API_BASE=https://modelapi.vn/v1`; gateway liệt kê `gpt-6-luna`, smoke test gọi `write_file` và `read_file` thành công. Harness bỏ temperature khi bật reasoning. `recursion_limit` mặc định là 60. Các lượt Gemini trước khi đổi nhà cung cấp không dùng làm kết quả OpenAI.
-- Môi trường: Windows PowerShell với `.venv` Python 3.12.10; chạy test và thí nghiệm trong Docker Linux, Python 3.11.16, Deep Agents 0.7.21. Các phiên bản khác ghi trong `report/environment.json`. Toàn bộ test ngoại tuyến: **29 passed in 13.54s**.
-- Trước freeze: hoàn thành 6 lượt baseline/subagents học và 3 lượt skills-auto-dev; smoke test kết nối và tools thành công qua gateway GenzShop. Các lượt lỗi Gemini và pilot CRLF được lưu riêng, không dùng làm dữ liệu thí nghiệm chính.
-- Commit của tag `freeze`: chưa thực hiện (thuộc Phần 4).
+- Môi trường: Windows PowerShell với `.venv` Python 3.12.10; chạy test và thí nghiệm trong Docker Linux, Python 3.11.16, Deep Agents 0.7.21. Các phiên bản khác ghi trong `report/environment.json`. Toàn bộ test ngoại tuyến: **29 passed in 14.32s**.
+- Hoàn thành 18 lượt đo chính (3 điều kiện × 6 tác vụ) và 3 lượt phát triển skills-auto-dev, tổng 21 lượt theo quy trình. Một pilot OpenAI/CRLF được chạy thêm và lưu riêng; curator chạy 2 lần. Tổng token của 18 lượt chính là 2075492; cả 21 lượt chính và dev là 2377154; cộng pilot CRLF là 2481923. Không tính token curator, smoke test hoặc lượt Gemini không đo hoàn chỉnh vào các tổng này. Các lượt lỗi Gemini và pilot CRLF được lưu riêng, không dùng làm dữ liệu thí nghiệm chính.
+- Commit giả thuyết: `0a476d1`; tag `freeze`: `f020b4e860ee7b5a0630e5448b14bf268c8abaf4`. Giả thuyết được commit trước freeze; không chạy hoặc đọc check đánh giá trước bước này.
 
 ## 2. Giả thuyết (commit TRƯỚC tag `freeze`, Phần 4.0)
 
-> Dự đoán điều kiện nào đạt điểm cao nhất trên **tác vụ đánh giá** và vì sao. Nêu căn cứ từ phân loại lỗi (mục 4) và từ tài liệu tham khảo. Điền cả ba dòng; `verify_freeze.py` kiểm tra điều này.
 
 - H1 (subagents so với baseline): Trên tập đánh giá, điểm trung bình subagents không cao hơn baseline, nhưng dùng nhiều token hơn. Baseline đã đạt 18/18 check kỹ thuật của tập học; phân chia worker không tự cung cấp các quy ước chưa biết. Lượt học subagents còn thiếu kiểm chứng ở log và đếm sai ở data. Cơ chế ngữ cảnh cô lập của `task` yêu cầu gửi lại đề và kiểm tra báo cáo (`GUIDE.md` mục 2.3, `guides/pseudocode/02_subagents.md`).
 - H2 (skills-auto so với baseline): Skills-auto có điểm đánh giá trung bình cao nhất, cải thiện ít nhất 0,15 so với baseline, chủ yếu ở check quy ước đã thấy trong phản hồi học. Curator biến phản hồi quy tắc thành quy trình có thể đọc lại; cơ chế progressive disclosure giúp chọn skill theo description (`guides/pseudocode/05_skill_quality.md` mục 1 và 5). Baseline học đạt 0/9 check quy ước nên còn nhiều dư địa cải thiện.
@@ -77,7 +75,7 @@
 . .\activate-lab.ps1
 ```
 
-Lưu ý cấu hình mô hình theo `src/lab/model.py`: nếu dùng Azure/cổng tương thích, điền đủ `AZURE_OPENAI_ENDPOINT`, `AZURE_OPENAI_KEY`, `AZURE_OPENAI_DEPLOYMENT_MODEL`. Nếu dùng OpenAI trực tiếp, cần cả `OPENAI_API_KEY` và `LAB_MODEL=openai:<tên-model-được-cấp-quyền>`; chỉ điền key sẽ không thay đổi mặc định `deepseek:deepseek-chat`. Không ghi khóa thật vào báo cáo hoặc mã nguồn.
+Lưu ý cấu hình mô hình theo `src/lab/model.py`: nếu dùng Azure/cổng tương thích, điền đủ `AZURE_OPENAI_ENDPOINT`, `AZURE_OPENAI_KEY`, `AZURE_OPENAI_DEPLOYMENT_MODEL`. Cấu hình GenzShop hiện tại dùng `OPENAI_API_BASE=https://modelapi.vn/v1` để đổi endpoint của SDK. Nếu dùng OpenAI trực tiếp, cần cả `OPENAI_API_KEY` và `LAB_MODEL=openai:<tên-model-được-cấp-quyền>`; chỉ điền key sẽ không thay đổi mặc định `deepseek:deepseek-chat`. Không ghi khóa thật vào báo cáo hoặc mã nguồn.
 
 ## 4. Đường cơ sở và phân loại lỗi (Phần 2.2)
 
@@ -118,44 +116,141 @@ Curator chạy 2 lần (một lần đầu và một lần chạy lại, trong g
 | Skill | Tổng quát hay riêng cho tác vụ học? | Đúng hay sai (nêu chỗ sai nếu có) | Độ dài, `description` và `skills_read` ở Phần 3.4 |
 |---|---|---|---|
 | code-fix-workflow | Quy trình sửa package, không nhúng tên hàm hoặc đáp án của đề | Khớp các quy tắc type hints, regression và changelog; giới hạn tối thiểu 3 là quy ước học nên cần xét phạm vi áp dụng | 8 dòng toàn tệp, 4 dòng thân; description kích hoạt sửa bug có yêu cầu typed API/test/changelog |
-| records-data-workflow | Quy trình JSON và cleaned CSV; header/vùng là quy ước tổ chức được phép giữ | Đúng đơn vị cents, meta, loại dữ liệu thiếu và UTC theo feedback; rows_used chỉ đếm bản ghi có amount | 11 dòng toàn tệp, 7 dòng thân; description bao quát chuyển dữ liệu bảng thành JSON/CSV |
+| records-data-workflow | Quy trình JSON và cleaned CSV; header/vùng là quy ước tổ chức được phép giữ nhưng giới hạn khả năng chuyển sang schema khác | Đúng cents, định nghĩa meta và UTC; thiếu tên bắt buộc clean.csv, header region không thích ứng với category ở eval | 11 dòng toàn tệp, 7 dòng thân; description bao quát chuyển dữ liệu bảng thành JSON/CSV |
 | log-triage-output | Quy tắc đầu ra log, không giữ dữ liệu hay đáp án cụ thể | Đúng chuẩn hóa service, thứ tự và schema; có dòng dư `=== END===` do model sinh nhưng không mâu thuẫn quy tắc | 8 dòng toàn tệp, 4 dòng thân kể cả delimiter dư; description kích hoạt tổng hợp service logs |
 
 Ba lượt Phần 3.4 được lưu nguyên ở `results/skills-auto-dev`: code 10/10 (178702 token, 145,2 giây), data 6/8 (56587 token, 51,3 giây), logs 9/9 (66373 token, 72,9 giây); mỗi lượt đọc 1 skill, skills_modified=false. Điểm trung bình 0,9167. Code bổ sung type hints, regression/changelog; log áp dụng đủ ba quy ước. Data đạt integer cents nhưng meta không đúng và tên CSV không phải clean.csv. Skill đã bỏ sót tên clean.csv dù feedback có nêu; đọc skill không bảo đảm áp dụng đủ. Không sửa tay skill để khắc phục.
 
 ## 7. Kết quả so sánh (Phần 4.3, 4.4)
 
-> Dán nội dung `report/table.md` và kết quả `python scripts/check_breakdown.py`. Nêu các lần chạy có `error` hoặc `skills_modified = true` (nếu có) và cách xử lý.
+Bảng dưới được sinh bằng module có sẵn `lab.compare`; bản độc lập ở [table.md](table.md). Điểm trung bình là trung bình điểm chuẩn hóa của từng tác vụ, không phải tỷ lệ cộng gộp mọi check.
+
+| Task | baseline | subagents | skills-auto |
+|---|---|---|---|
+| code-learn | 7/10 | 7/10 | 10/10 |
+| data-learn | 5/8 | 4/8 | 6/8 |
+| logs-learn | 6/9 | 0/9 | 9/9 |
+| code-eval | 7/11 | 7/11 | 10/11 |
+| data-eval | 5/9 | 5/9 | 6/9 |
+| logs-eval | 6/10 | 6/10 | 9/10 |
+| **Mean score - learning tasks** | 0.66 | 0.40 | 0.92 |
+| **Mean score - evaluation tasks** | 0.60 | 0.60 | 0.83 |
+| **Mean tokens per run** | 78,324 | 148,514 | 119,076 |
+| **Runs that read a skill** | 0/6 | 0/6 | 6/6 |
+
+Đầu ra nguyên văn của `scripts/check_breakdown.py`:
 
 ```text
-(dán bảng ở đây)
+condition     role    technical  house rules  mean tokens  read a skill
+baseline      eval     18/18         0/12          75,727      0/3     
+baseline      learn    18/18         0/9           80,921      0/3     
+subagents     eval     18/18         0/12         170,882      0/3     
+subagents     learn    11/18         0/9          126,146      0/3     
+skills-auto   eval     18/18         7/12         130,895      3/3     
+skills-auto   learn    18/18         7/9          107,258      3/3
 ```
+
+Kiểm chứng `scripts/verify_freeze.py`: **checked 6 runs of skill conditions: OK**. Cả 18 lượt chính có `error=null`, token > 0, `skills_modified=false`, và đủ run.json/trace.md. Không chạy lại một lượt chính nào để chọn điểm tốt; chỉ chạy lại pilot CRLF trước khi có bộ kết quả baseline chính. Phản hồi eval không được đưa trở lại curator. Xem [submission-audit.json](submission-audit.json), [statistics.json](statistics.json) và [task-statistics.json](task-statistics.json).
+
+Thống kê gọi worker và đọc skill:
+
+| Tác vụ | Worker | Subagent calls | Skills đọc trong skills-auto |
+|---|---|---:|---:|
+| code-eval | explorer | 1 | 1 |
+| code-learn | explorer | 1 | 1 |
+| data-eval | explorer | 1 | 2 |
+| data-learn | general-purpose | 1 | 2 |
+| logs-eval | general-purpose | 1 | 1 |
+| logs-learn | general-purpose | 1 | 1 |
+
+`explorer` được gọi 3 lần và `general-purpose` 3 lần; implementer/reviewer riêng không được gọi ở các lượt này. Trong eval, code/data giao việc đọc/phân tích rồi tác tử chính thực hiện; log giao việc tạo output, sau đó tác tử chính đọc lại và chạy kiểm tra JSON/counts. Cách kiểm chứng log eval tốt hơn log learn, nhưng không cung cấp quy ước ẩn nên vẫn đạt 6/10. Hai tác vụ data đọc cả skill dữ liệu lẫn skill log; skill log không tạo thêm điểm cho dữ liệu bảng.
 
 ## 8. Phân tích
 
-> Trả lời từng câu bằng số liệu từ mục 7 và bằng chứng từ vết. Kết quả âm hoặc không có khác biệt vẫn hợp lệ nếu được phân tích tốt.
+1. **Điểm học và đánh giá, kiểm tra giả thuyết.** Skills-auto tăng điểm học từ 0.6639 lên 0.9167 (Δ=0.2528) và điểm đánh giá từ 0.5973 lên 0.8253 (Δ=0.2279, tương đương 22.79 điểm phần trăm). Subagents học giảm xuống 0.4000, còn eval bằng baseline 0.5973. H1 được số liệu lượt đo này ủng hộ: không tăng điểm eval nhưng token cao hơn. H2 được ủng hộ: skills-auto cao nhất và Δ eval > 0,15. H3 được ủng hộ: khoảng cách học–eval của skills-auto là 0.0914 > 0,05. Không có điều kiện tăng điểm học mà không tăng điểm eval so với baseline; tuy nhiên khoảng cách học–eval vẫn cho thấy tổng quát hóa chưa đầy đủ.
 
-1. So với `baseline`, điều kiện nào cải thiện điểm tác vụ **học**? Điều kiện nào cải thiện điểm tác vụ **đánh giá**? Có điều kiện nào cải thiện tác vụ học nhưng không cải thiện tác vụ đánh giá? Nếu có, đó là dấu hiệu gì?
-2. Tách điểm thành check kỹ thuật và check quy ước (`rule_`). Skill do curator sinh giúp nhóm check nào? Check quy ước **mới** của tác vụ đánh giá có được skill giúp không, và vì sao?
-3. Dựa vào vết và `skills_read`, giải thích một check mà skill giúp đạt và một check mà skill không giúp (skill chưa được đọc, đọc nhưng không làm theo, skill thiếu hoặc sai).
-4. Chi phí: so sánh số token trung bình giữa các điều kiện. Điều kiện nào có hiệu quả tốt nhất theo điểm trên mỗi token? Đa tác tử có đáng chi phí trong thí nghiệm này không?
-5. Có dấu hiệu rò rỉ dữ liệu hoặc quá khớp nào trong skill sinh ra không? Nhóm đã phòng tránh như thế nào?
-6. Nhiễu: so sánh điểm tác vụ học của cùng bộ skill ở Phần 3.4 (đã sao lưu) và sau đóng băng. Chênh lệch bao nhiêu? Nó cho biết điều gì về độ tin cậy của các chênh lệch trong bảng ở mục 7?
+2. **Check kỹ thuật và quy ước.** Baseline đạt 18/18 kỹ thuật ở cả học và eval, nhưng 0/9 và 0/12 quy ước. Skills-auto giữ 18/18 kỹ thuật và tăng quy ước lên 7/9 học, 7/12 eval. Do đó hiệu quả chính là chuyển quy ước đã học vào ngữ cảnh tác tử, không phải bằng chứng cải thiện năng lực tính toán/sửa bug. Ba quy ước mới của eval (`rule_version_bump`, `rule_sorted_keys_format`, `rule_source_line`) đều không đạt ở skills-auto, phù hợp với việc chúng không có trong skill. Các quy ước còn lại chuyển được 7/9; meta và clean.csv của data vẫn thiếu hoặc sai.
+
+3. **Cơ chế và lỗi còn lại.** Ở logs-eval, vết có đọc `skills/log-triage-output/SKILL.md`, tạo JSON với schema_version=2/generated_by=log-triage, chuẩn hóa service, sắp xếp errors và assert lại ordering/counts: ba check quy ước cũ tăng từ không đạt lên đạt. `rule_source_line` không đạt vì skill không hướng dẫn giữ số dòng nguồn. Ở code-eval, vết đọc code-fix-workflow rồi thêm regression/type hints/changelog; ba check này đạt nhưng version bump không đạt. Ở data-eval, skills_read=2 nhưng `meta.source` dùng đường dẫn kèm workspace thay vì tên tệp; meta sai dù câu trả lời nói đã có meta. Skill dữ liệu không giữ tên bắt buộc clean.csv; tác tử không tạo tệp này. Header chứa region và bốn hướng trong skill cũng quá hẹp khi dữ liệu mới dùng category. Đây là giới hạn ngữ nghĩa của skill và áp dụng một phần, không phải không đọc skill.
+
+4. **Chi phí token.** Dùng chỉ số ∑ điểm chuẩn hóa / ∑ token × 10^6, không gọi đây là chi phí tiền vì chưa có thông tin giá và routing/billing của gateway.
+
+| Điều kiện | Token TB toàn bộ | Token TB eval | Giây TB eval | Điểm / triệu token (tất cả) | Điểm / triệu token (eval) |
+|---|---:|---:|---:|---:|---:|
+| baseline | 78324.5 | 75727.7 | 51.5 | 8.05 | 7.89 |
+| subagents | 148514.2 | 170882.3 | 122.1 | 3.36 | 3.50 |
+| skills-auto | 119076.7 | 130895.0 | 78.3 | 7.31 | 6.30 |
+
+Trên eval, skills-auto dùng 1.73 lần token baseline để tăng 0.2279 điểm; subagents dùng 2.26 lần mà không tăng điểm. Baseline tốt nhất về điểm trên mỗi token khi tính cả sáu tác vụ và riêng eval; skills-auto tốt nhất về điểm tuyệt đối. Riêng tập học, skills-auto đạt 8.55 điểm/triệu token so với baseline 8.20. Trong thí nghiệm này, subagents không đáng chi phí thêm nếu mục tiêu là đạt check; kết luận không áp dụng cho mọi loại dự án.
+
+5. **Rò rỉ và quá khớp.** Curator chỉ đọc run role=learn của baseline; không đọc hoặc đưa eval vào prompt. Validator loại skill chứa marker eval; lần đầu một từ thông thường bị trùng marker và bị loại, không phải phát hiện đáp án eval trong skill. Giả thuyết được commit trước tag; eval chạy sau tag; hash xác nhận bộ skill không đổi. Skill không chứa đáp án số hoặc tên hàm của đề; tên file đầu ra/keys/region là quy ước được phép giữ. Dấu hiệu quá hẹp là header region không thích ứng với category ở data-eval; không gọi mọi khoảng cách học–eval là quá khớp vì eval thêm quy tắc mới. Sau freeze chỉ đọc check eval để giải thích kết quả trong báo cáo, không chỉnh skill, harness hay tái huấn luyện curator.
+
+6. **Nhiễu của cùng bộ skill.** Các lượt dev được giữ nguyên trong results/skills-auto-dev và so với lượt chính sau freeze:
+
+| Tác vụ | Điểm dev | Điểm sau freeze | Δ điểm | Token dev | Token sau freeze | Δ token |
+|---|---:|---:|---:|---:|---:|---:|
+| code-learn | 10/10 | 10/10 | 0.0000 | 178702 | 167979 | -10723 |
+| data-learn | 6/8 | 6/8 | 0.0000 | 56587 | 81195 | +24608 |
+| logs-learn | 9/9 | 9/9 | 0.0000 | 66373 | 72601 | +6228 |
+
+Điểm của cả ba tác vụ không đổi, nhưng token trung bình tăng từ 100554.0 lên 107258.3 (6.67%), còn thời gian trung bình giảm từ 89,8 xuống 73,6 giây. Data sau freeze đọc thêm một skill so với dev. Không thấy nhiễu điểm ở hai lần quan sát này, nhưng không thể kết luận điểm luôn ổn định; nhiễu chi phí vẫn rõ. Đây không phải vòng học thứ hai vì skill byte-for-byte không đổi.
 
 ## 9. Hạn chế và tính hợp lệ
 
-> Nêu ít nhất 3 hạn chế và ảnh hưởng của từng hạn chế đến kết luận (ví dụ: chỉ 3 tác vụ mỗi vai trò, mỗi cấu hình chạy một lần, nhiễu của mô hình, tác vụ do giảng viên thiết kế sẵn quy ước, chỉ một mô hình).
-
-1.
-2.
-3.
+1. Chỉ ba tác vụ mỗi vai trò, mỗi điều kiện chính chạy một lần: một lỗi schema hoặc một lượt bất thường ảnh hưởng lớn đến trung bình; không có kiểm định ý nghĩa thống kê hay khoảng tin cậy.
+2. Mô hình sinh không tất định dù dùng cùng cấu hình reasoning low: so sánh skills-auto-dev với lượt học sau freeze chỉ là ước lượng nhiễu thô, không tách được nhiễu từ hiệu ứng thứ tự.
+3. Tác vụ được giảng viên thiết kế với quy ước ẩn: việc nhớ cents/meta/changelog có lợi rõ, nhưng không đại diện cho mọi dự án thực tế. Quy ước mới không thể suy ra chỉ từ quy tắc cũ.
+4. Chỉ dùng một model qua gateway bên thứ ba: model ID, token usage và hành vi do gateway báo; chưa kiểm chứng routing nội bộ, chi phí thanh toán hay độ ổn định ở nhà cung cấp khác.
+5. Các worker riêng không phải lúc nào được chọn; worker general-purpose vẫn có thể chạy. Vì vậy kết quả đo điều kiện harness có subagents, không cô lập tác dụng của từng vai trò explorer/implementer/reviewer.
+6. Trace chỉ chứa luồng chính và mỗi nội dung bị render_trace giới hạn 1500 ký tự. Token callback tính cả worker, nhưng không thể suy ra đầy đủ các thao tác nội bộ worker hay mọi dòng output từ trace.
+7. Curator thiếu tên clean.csv và để lại delimiter dư trong một skill. Skill hợp lệ về định dạng không bảo đảm đầy đủ về ngữ nghĩa; không sửa tay để bảo toàn thí nghiệm tự tiến hóa.
+8. Checkout Windows cần chuẩn hóa CRLF trong Python sandbox, và kiểm chứng hash skills phải chạy trong Docker Linux do hash_dir dùng cách viết đường dẫn theo hệ điều hành. Các nguồn tasks và grader gốc giữ nguyên; pilot lỗi môi trường được tách khỏi số liệu chính.
 
 ## 10. Kết luận
 
-> Tối đa 5 câu. Chỉ khẳng định điều số liệu hỗ trợ. Nêu một đề xuất cải tiến tiếp theo.
+Skills-auto có điểm đánh giá cao nhất trong lượt đo này (0,8253), tăng 0,2279 so với baseline nhờ 7 check quy ước đã học. Nó không khôi phục được ba quy ước mới và vẫn thiếu hai quy ước dữ liệu. Subagents không tăng điểm đánh giá và dùng khoảng 2,26 lần token baseline. Baseline có hiệu quả điểm trên token tốt nhất trên tập đánh giá, còn skills-auto ưu tiên chất lượng tuyệt đối. Bước tiếp theo là lặp thí nghiệm ở thư mục riêng và kiểm tra ngữ nghĩa skill/đầu ra trước khi chốt bộ skill cho một thí nghiệm mới.
 
 ## Phụ lục
 
-- Lệnh đã chạy (theo thứ tự):
-- Thử thách mở rộng (nếu có): hướng chọn, kết quả, nhận xét.
-- Ghi chú khác:
+### Lệnh tái lập và thứ tự đã thực hiện
+
+Trên Windows dùng Docker Desktop Linux containers; shell tác tử cần /bin/sh. Cài key vào .env (không commit), giữ endpoint/model theo .env.example. Có thể dot-source activate-lab.ps1 cho terminal Windows; thí nghiệm và verify_freeze chạy trong container để tránh khác biệt hash đường dẫn giữa Windows/Linux.
+
+```powershell
+docker build -f Dockerfile.lab -t lab-deepagents-day20 .
+docker run --rm -v "${PWD}:/lab" -w /lab lab-deepagents-day20 python -m pytest -o addopts= -q
+docker run --rm --env-file .env -v "${PWD}:/lab" -w /lab lab-deepagents-day20 python check_gateway.py
+docker run --rm --env-file .env -v "${PWD}:/lab" -w /lab lab-deepagents-day20 python check_model.py
+docker run --rm --env-file .env -v "${PWD}:/lab" -w /lab lab-deepagents-day20 python -m lab.runner --condition baseline --tasks learn
+docker run --rm --env-file .env -v "${PWD}:/lab" -w /lab lab-deepagents-day20 python -m lab.runner --condition subagents --tasks learn
+docker run --rm --env-file .env -v "${PWD}:/lab" -w /lab lab-deepagents-day20 python -m lab.curator
+docker run --rm --env-file .env -v "${PWD}:/lab" -w /lab lab-deepagents-day20 python -m lab.runner --condition skills-auto --tasks learn
+Move-Item -LiteralPath results/skills-auto -Destination results/skills-auto-dev
+git add .env.example pyproject.toml src report results skills .gitattributes
+git commit -m hypotheses
+git commit --allow-empty -m "freeze skills"
+git tag freeze
+docker run --rm --env-file .env -v "${PWD}:/lab" -w /lab lab-deepagents-day20 python -m lab.runner --condition baseline --tasks eval
+docker run --rm --env-file .env -v "${PWD}:/lab" -w /lab lab-deepagents-day20 python -m lab.runner --condition subagents --tasks eval
+docker run --rm --env-file .env -v "${PWD}:/lab" -w /lab lab-deepagents-day20 python -m lab.runner --condition skills-auto --tasks all
+docker run --rm --env-file .env -v "${PWD}:/lab" -w /lab lab-deepagents-day20 python collect_reports.py
+python finalize_report.py
+```
+
+Các lệnh trên mô tả tái lập từ bản chưa freeze; không tạo lại tag hay ghi đè kết quả đã nộp. Nếu muốn đo thêm, dùng --results results-replication và giữ bộ kết quả chính. Thực tế có thêm một baseline code-learn pilot lỗi CRLF (archive rồi chạy lại), và hai lần curator (lần đầu archive 2 skill hợp lệ, lần hai tạo bộ cuối). Đợt curator thứ hai và việc lưu kết quả dev đều xảy ra trước commit hypotheses; từ freeze không thay đổi skills/auto. Tệp collect_reports.py chỉ gọi module so sánh và các script kiểm tra có sẵn, rồi tổng hợp metadata; không gọi mô hình hoặc chỉnh skill.
+
+### Tài liệu làm căn cứ
+
+- [README: thiết kế thí nghiệm](../README.md), mục 2.1–2.2.
+- [GUIDE: trình tự học, curator, freeze, đánh giá](../GUIDE.md), Phần 2–5.
+- [Pseudo-code subagents](../guides/pseudocode/02_subagents.md): vai trò và ngữ cảnh cô lập.
+- [Chất lượng skill](../guides/pseudocode/05_skill_quality.md): progressive disclosure, tính tổng quát và áp dụng một phần.
+- [Hướng dẫn GenzShop Codex](https://genzshop.vn/pages/docs.php?product=codex): endpoint modelapi.vn/v1 và Responses API; model gpt-6-luna được xác nhận trực tiếp qua danh sách model của gateway.
+
+### Ghi chú tính toàn vẹn
+
+- Không làm phần thưởng tùy chọn; hoàn thành các phần bắt buộc 0–5.
+- Giữ nguyên các tệp được cung cấp và nguồn workspace của đề; chỉ cài đặt bốn module sinh viên cùng cấu hình/hỗ trợ chạy.
+- .env được gitignore, không nằm trong index; rà soát khóa thật trong source/report/results/skills đạt PASS.
+- Các lỗi Gemini trước khi chọn gateway nằm riêng ở results/infrastructure-pilot và results/gemini-infrastructure-attempts; không được đưa vào curator, bảng so sánh hay phân tích hiệu quả cuối.
+- Chưa chuyển sang nhà cung cấp khác sau freeze. Kết quả ghi model ID/usage mà gateway trả về, không xác nhận routing nội bộ hoặc giá thanh toán.

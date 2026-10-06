@@ -1,0 +1,208 @@
+{
+  "baseline": {
+    "learn": {
+      "runs": 3,
+      "mean_score": 0.6638888888888889,
+      "mean_tokens": 80921.33333333333,
+      "mean_seconds": 59.03333333333333,
+      "technical": [
+        18,
+        18
+      ],
+      "rules": [
+        0,
+        9
+      ],
+      "runs_reading_skills": 0,
+      "subagent_calls": 0,
+      "score_per_million_tokens": 8.204126916127048,
+      "errors": []
+    },
+    "eval": {
+      "runs": 3,
+      "mean_score": 0.5973063973063973,
+      "mean_tokens": 75727.66666666667,
+      "mean_seconds": 51.46666666666667,
+      "technical": [
+        18,
+        18
+      ],
+      "rules": [
+        0,
+        12
+      ],
+      "runs_reading_skills": 0,
+      "subagent_calls": 0,
+      "score_per_million_tokens": 7.8875584525215015,
+      "errors": []
+    },
+    "all": {
+      "runs": 6,
+      "mean_score": 0.6305976430976431,
+      "mean_tokens": 78324.5,
+      "mean_seconds": 55.25,
+      "technical": [
+        36,
+        36
+      ],
+      "rules": [
+        0,
+        21
+      ],
+      "runs_reading_skills": 0,
+      "subagent_calls": 0,
+      "score_per_million_tokens": 8.051090566778505,
+      "errors": []
+    }
+  },
+  "subagents": {
+    "learn": {
+      "runs": 3,
+      "mean_score": 0.39999999999999997,
+      "mean_tokens": 126146,
+      "mean_seconds": 99.46666666666667,
+      "technical": [
+        11,
+        18
+      ],
+      "rules": [
+        0,
+        9
+      ],
+      "runs_reading_skills": 0,
+      "subagent_calls": 3,
+      "score_per_million_tokens": 3.1709289236281766,
+      "errors": []
+    },
+    "eval": {
+      "runs": 3,
+      "mean_score": 0.5973063973063973,
+      "mean_tokens": 170882.33333333334,
+      "mean_seconds": 122.1,
+      "technical": [
+        18,
+        18
+      ],
+      "rules": [
+        0,
+        12
+      ],
+      "runs_reading_skills": 0,
+      "subagent_calls": 3,
+      "score_per_million_tokens": 3.495425101325458,
+      "errors": []
+    },
+    "all": {
+      "runs": 6,
+      "mean_score": 0.4986531986531986,
+      "mean_tokens": 148514.16666666666,
+      "mean_seconds": 110.78333333333333,
+      "technical": [
+        29,
+        36
+      ],
+      "rules": [
+        0,
+        21
+      ],
+      "runs_reading_skills": 0,
+      "subagent_calls": 6,
+      "score_per_million_tokens": 3.3576136865946484,
+      "errors": []
+    }
+  },
+  "skills-auto": {
+    "learn": {
+      "runs": 3,
+      "mean_score": 0.9166666666666666,
+      "mean_tokens": 107258.33333333333,
+      "mean_seconds": 73.6,
+      "technical": [
+        18,
+        18
+      ],
+      "rules": [
+        7,
+        9
+      ],
+      "runs_reading_skills": 3,
+      "subagent_calls": 0,
+      "score_per_million_tokens": 8.546344495377204,
+      "errors": []
+    },
+    "eval": {
+      "runs": 3,
+      "mean_score": 0.8252525252525252,
+      "mean_tokens": 130895,
+      "mean_seconds": 78.26666666666667,
+      "technical": [
+        18,
+        18
+      ],
+      "rules": [
+        7,
+        12
+      ],
+      "runs_reading_skills": 3,
+      "subagent_calls": 0,
+      "score_per_million_tokens": 6.304690975610415,
+      "errors": []
+    },
+    "all": {
+      "runs": 6,
+      "mean_score": 0.8709595959595959,
+      "mean_tokens": 119076.66666666667,
+      "mean_seconds": 75.93333333333334,
+      "technical": [
+        36,
+        36
+      ],
+      "rules": [
+        14,
+        21
+      ],
+      "runs_reading_skills": 6,
+      "subagent_calls": 0,
+      "score_per_million_tokens": 7.314275922735458,
+      "errors": []
+    }
+  },
+  "skills-auto-dev": {
+    "learn": {
+      "runs": 3,
+      "mean_score": 0.9166666666666666,
+      "mean_tokens": 100554,
+      "mean_seconds": 89.8,
+      "technical": [
+        18,
+        18
+      ],
+      "rules": [
+        7,
+        9
+      ],
+      "runs_reading_skills": 3,
+      "subagent_calls": 0,
+      "score_per_million_tokens": 9.116163122965437,
+      "errors": []
+    },
+    "all": {
+      "runs": 3,
+      "mean_score": 0.9166666666666666,
+      "mean_tokens": 100554,
+      "mean_seconds": 89.8,
+      "technical": [
+        18,
+        18
+      ],
+      "rules": [
+        7,
+        9
+      ],
+      "runs_reading_skills": 3,
+      "subagent_calls": 0,
+      "score_per_million_tokens": 9.116163122965437,
+      "errors": []
+    }
+  }
+}

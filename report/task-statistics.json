@@ -1,0 +1,325 @@
+{
+  "baseline": [
+    {
+      "task": "code-eval",
+      "passed": 7,
+      "total": 11,
+      "score": 0.6363636363636364,
+      "tokens": {
+        "input": 105721,
+        "output": 2134,
+        "total": 107855
+      },
+      "seconds": 84.9,
+      "subagent_calls": 0,
+      "skills_read": 0,
+      "error": null
+    },
+    {
+      "task": "code-learn",
+      "passed": 7,
+      "total": 10,
+      "score": 0.7,
+      "tokens": {
+        "input": 130805,
+        "output": 1728,
+        "total": 132533
+      },
+      "seconds": 72.7,
+      "subagent_calls": 0,
+      "skills_read": 0,
+      "error": null
+    },
+    {
+      "task": "data-eval",
+      "passed": 5,
+      "total": 9,
+      "score": 0.5555555555555556,
+      "tokens": {
+        "input": 78390,
+        "output": 1576,
+        "total": 79966
+      },
+      "seconds": 44.5,
+      "subagent_calls": 0,
+      "skills_read": 0,
+      "error": null
+    },
+    {
+      "task": "data-learn",
+      "passed": 5,
+      "total": 8,
+      "score": 0.625,
+      "tokens": {
+        "input": 47126,
+        "output": 2163,
+        "total": 49289
+      },
+      "seconds": 54.5,
+      "subagent_calls": 0,
+      "skills_read": 0,
+      "error": null
+    },
+    {
+      "task": "logs-eval",
+      "passed": 6,
+      "total": 10,
+      "score": 0.6,
+      "tokens": {
+        "input": 38500,
+        "output": 862,
+        "total": 39362
+      },
+      "seconds": 25.0,
+      "subagent_calls": 0,
+      "skills_read": 0,
+      "error": null
+    },
+    {
+      "task": "logs-learn",
+      "passed": 6,
+      "total": 9,
+      "score": 0.6666666666666666,
+      "tokens": {
+        "input": 58408,
+        "output": 2534,
+        "total": 60942
+      },
+      "seconds": 49.9,
+      "subagent_calls": 0,
+      "skills_read": 0,
+      "error": null
+    }
+  ],
+  "subagents": [
+    {
+      "task": "code-eval",
+      "passed": 7,
+      "total": 11,
+      "score": 0.6363636363636364,
+      "tokens": {
+        "input": 203625,
+        "output": 3576,
+        "total": 207201
+      },
+      "seconds": 136.0,
+      "subagent_calls": 1,
+      "skills_read": 0,
+      "error": null
+    },
+    {
+      "task": "code-learn",
+      "passed": 7,
+      "total": 10,
+      "score": 0.7,
+      "tokens": {
+        "input": 118354,
+        "output": 2326,
+        "total": 120680
+      },
+      "seconds": 102.6,
+      "subagent_calls": 1,
+      "skills_read": 0,
+      "error": null
+    },
+    {
+      "task": "data-eval",
+      "passed": 5,
+      "total": 9,
+      "score": 0.5555555555555556,
+      "tokens": {
+        "input": 152563,
+        "output": 3487,
+        "total": 156050
+      },
+      "seconds": 113.8,
+      "subagent_calls": 1,
+      "skills_read": 0,
+      "error": null
+    },
+    {
+      "task": "data-learn",
+      "passed": 4,
+      "total": 8,
+      "score": 0.5,
+      "tokens": {
+        "input": 120073,
+        "output": 3231,
+        "total": 123304
+      },
+      "seconds": 73.1,
+      "subagent_calls": 1,
+      "skills_read": 0,
+      "error": null
+    },
+    {
+      "task": "logs-eval",
+      "passed": 6,
+      "total": 10,
+      "score": 0.6,
+      "tokens": {
+        "input": 145494,
+        "output": 3902,
+        "total": 149396
+      },
+      "seconds": 116.5,
+      "subagent_calls": 1,
+      "skills_read": 0,
+      "error": null
+    },
+    {
+      "task": "logs-learn",
+      "passed": 0,
+      "total": 9,
+      "score": 0.0,
+      "tokens": {
+        "input": 129609,
+        "output": 4845,
+        "total": 134454
+      },
+      "seconds": 122.7,
+      "subagent_calls": 1,
+      "skills_read": 0,
+      "error": null
+    }
+  ],
+  "skills-auto": [
+    {
+      "task": "code-eval",
+      "passed": 10,
+      "total": 11,
+      "score": 0.9090909090909091,
+      "tokens": {
+        "input": 241993,
+        "output": 4154,
+        "total": 246147
+      },
+      "seconds": 136.6,
+      "subagent_calls": 0,
+      "skills_read": 1,
+      "error": null
+    },
+    {
+      "task": "code-learn",
+      "passed": 10,
+      "total": 10,
+      "score": 1.0,
+      "tokens": {
+        "input": 165527,
+        "output": 2452,
+        "total": 167979
+      },
+      "seconds": 96.6,
+      "subagent_calls": 0,
+      "skills_read": 1,
+      "error": null
+    },
+    {
+      "task": "data-eval",
+      "passed": 6,
+      "total": 9,
+      "score": 0.6666666666666666,
+      "tokens": {
+        "input": 76173,
+        "output": 914,
+        "total": 77087
+      },
+      "seconds": 31.5,
+      "subagent_calls": 0,
+      "skills_read": 2,
+      "error": null
+    },
+    {
+      "task": "data-learn",
+      "passed": 6,
+      "total": 8,
+      "score": 0.75,
+      "tokens": {
+        "input": 79061,
+        "output": 2134,
+        "total": 81195
+      },
+      "seconds": 55.2,
+      "subagent_calls": 0,
+      "skills_read": 2,
+      "error": null
+    },
+    {
+      "task": "logs-eval",
+      "passed": 9,
+      "total": 10,
+      "score": 0.9,
+      "tokens": {
+        "input": 66611,
+        "output": 2840,
+        "total": 69451
+      },
+      "seconds": 66.7,
+      "subagent_calls": 0,
+      "skills_read": 1,
+      "error": null
+    },
+    {
+      "task": "logs-learn",
+      "passed": 9,
+      "total": 9,
+      "score": 1.0,
+      "tokens": {
+        "input": 69948,
+        "output": 2653,
+        "total": 72601
+      },
+      "seconds": 69.0,
+      "subagent_calls": 0,
+      "skills_read": 1,
+      "error": null
+    }
+  ],
+  "skills-auto-dev": [
+    {
+      "task": "code-learn",
+      "passed": 10,
+      "total": 10,
+      "score": 1.0,
+      "tokens": {
+        "input": 175893,
+        "output": 2809,
+        "total": 178702
+      },
+      "seconds": 145.2,
+      "subagent_calls": 0,
+      "skills_read": 1,
+      "error": null
+    },
+    {
+      "task": "data-learn",
+      "passed": 6,
+      "total": 8,
+      "score": 0.75,
+      "tokens": {
+        "input": 55434,
+        "output": 1153,
+        "total": 56587
+      },
+      "seconds": 51.3,
+      "subagent_calls": 0,
+      "skills_read": 1,
+      "error": null
+    },
+    {
+      "task": "logs-learn",
+      "passed": 9,
+      "total": 9,
+      "score": 1.0,
+      "tokens": {
+        "input": 63132,
+        "output": 3241,
+        "total": 66373
+      },
+      "seconds": 72.9,
+      "subagent_calls": 0,
+      "skills_read": 1,
+      "error": null
+    }
+  ]
+}

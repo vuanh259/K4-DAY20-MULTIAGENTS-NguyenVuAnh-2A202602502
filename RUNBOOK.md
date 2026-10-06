@@ -39,4 +39,16 @@ Các lần chạy lại ghi đè kết quả của cùng điều kiện/tác v�
 
 Sản phẩm chính: `results/`, `skills/auto/`, `report/REPORT.md`, `report/table.md`. Báo cáo ghi kết quả thật, lệnh chạy, commit freeze và hạn chế. Phần mở rộng là tùy chọn và không nằm trong kết quả chính.
 
-Gateway GenzShop: https://modelapi.vn/v1 (bien OPENAI_API_BASE). API /v1/models da xac nhan ho tro gpt-6-luna. Huong dan: https://genzshop.vn/pages/docs.php?product=codex .
+Gateway GenzShop: `https://modelapi.vn/v1` (biến `OPENAI_API_BASE`). API `/v1/models` đã xác nhận hỗ trợ `gpt-6-luna`. [Hướng dẫn](https://genzshop.vn/pages/docs.php?product=codex).
+
+## Bản đã hoàn thành
+
+Tag `freeze` ở commit `f020b4e`; commit `hypotheses` trước đó là `0a476d1`. Đủ 18 lượt chính và 3 lượt dev đã lưu. Không chạy lại các lệnh tạo tag hoặc ghi đè kết quả chính trên bản này; đo thêm dùng `--results results-replication`.
+
+Để kiểm chứng và tạo lại bảng từ dữ liệu hiện có (không gọi mô hình):
+
+```powershell
+docker run --rm --env-file .env -v "${PWD}:/lab" -w /lab lab-deepagents-day20 python collect_reports.py
+```
+
+Lệnh kiểm tra freeze, nguồn/hàm có sẵn, đủ kết quả, không sửa skill và không lộ khóa; sinh `report/table.md`, `check-breakdown.txt`, `freeze-verification.txt`, `statistics.json`, `task-statistics.json`, `submission-audit.json`.
