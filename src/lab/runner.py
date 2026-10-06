@@ -6,9 +6,16 @@ Chạy thật:   python -m lab.runner --condition baseline --tasks learn
 """
 import argparse
 import json
+import os
+import re
+import tempfile
+import time
+from datetime import datetime, timezone
 from pathlib import Path
 
 from langchain_core.messages import AIMessage, ToolMessage
+from langchain_core.callbacks import UsageMetadataCallbackHandler
+from .agent import build_agent
 
 from .grading import grade                                                      # có sẵn
 from .tasks import ROOT, get_task, hash_dir, list_tasks, prepare_sandbox         # có sẵn
@@ -65,7 +72,66 @@ def run_task(task_id: str, condition: str, results_dir="results", model=None, re
     Lỗi khi chạy tác tử KHÔNG được làm chương trình dừng: ghi vào `error` và vẫn chấm điểm.
     Sandbox là thư mục tạm NGOÀI kho mã nguồn và phải được xóa sau khi chạy.
     """
-    raise NotImplementedError("TODO 1: cài đặt run_task (xem guides/pseudocode/03_runner.md)")
+    cfg = CONDITIONS[condition]
+    task = get_task(task_id)
+    skills_dir = ROOT / cfg["skills_dir"] if cfg["skills_dir"] else None
+    out = Path(results_dir) / condition / task_id
+    out.mkdir(parents=True, exist_ok=True)
+    record = {"task": task_id, "condition": condition, "role": task.role,
+              "error": None, "timestamp": datetime.now(timezone.utc).isoformat()}
+    usage = UsageMetadataCallbackHandler()
+    messages = []
+
+    def redact(text):
+        for name, value in os.environ.items():
+            if value and len(value) >= 8 and any(part in name.upper() for part in ("KEY", "TOKEN", "SECRET")):
+                text = text.replace(value, "[REDACTED_SECRET]")
+        return re.sub(r"\bsk-[A-Za-z0-9_*.-]+", "[REDACTED_API_KEY]", text)
+
+    with tempfile.TemporaryDirectory(prefix="lab-task-") as tmp:
+        sandbox = Path(tmp)
+        prepare_sandbox(task, sandbox, skills_dir)
+        # Windows checkout may use CRLF; the supplied checks hash original LF tests.
+        # Normalize only copied Python sources in the temporary Linux workspace.
+        for source in (sandbox / "workspace").rglob("*.py"):
+            original = source.read_bytes()
+            if b"\r\n" in original:
+                source.write_bytes(original.replace(b"\r\n", b"\n"))
+        before = hash_dir(sandbox / "skills")
+        record["skills_sha256"] = before
+        started = time.perf_counter()
+        try:
+            agent = build_agent(sandbox, mode=cfg["mode"], use_skills=skills_dir is not None, model=model)
+            for state in agent.stream(
+                {"messages": [{"role": "user", "content": task.instruction}]},
+                config={"callbacks": [usage], "recursion_limit": recursion_limit},
+                stream_mode="values",
+            ):
+                messages = state.get("messages", messages)
+                # Retain the last state, including a partial trace if an API or recursion error occurs.
+                (out / "trace.md").write_text(redact(render_trace(messages)), encoding="utf-8")
+        except Exception as exc:
+            record["error"] = redact(f"{type(exc).__name__}: {exc}")
+        record["seconds"] = round(time.perf_counter() - started, 1)
+        record["tokens"] = {short: sum(v.get(long, 0) for v in usage.usage_metadata.values())
+                            for short, long in [("input", "input_tokens"), ("output", "output_tokens"), ("total", "total_tokens")]}
+        calls = [call for m in messages if isinstance(m, AIMessage) for call in m.tool_calls]
+        record["tool_calls"] = len(calls)
+        record["subagent_calls"] = sum(c["name"] == "task" for c in calls)
+        names = set()
+        for call in calls:
+            if call["name"] == "read_file":
+                match = re.search(r"(?:^|/)skills/([^/]+)/", call["args"].get("file_path", "").replace("\\", "/"))
+                if match:
+                    names.add(match.group(1))
+        record["skills_read"] = len(names)
+        record["skills_modified"] = hash_dir(sandbox / "skills") != before
+        record["final_message"] = messages[-1].content if messages else ""
+        record.update(grade(task, sandbox / "workspace"))
+        (out / "trace.md").write_text(redact(render_trace(messages)), encoding="utf-8")
+    record = json.loads(redact(json.dumps(record, ensure_ascii=False)))
+    (out / "run.json").write_text(json.dumps(record, ensure_ascii=False, indent=2), encoding="utf-8")
+    return record
 
 
 def main(argv=None):

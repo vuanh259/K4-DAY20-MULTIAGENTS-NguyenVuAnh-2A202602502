@@ -1,0 +1,21 @@
+{
+  "status": "OK",
+  "tools": [
+    "write_file",
+    "read_file"
+  ],
+  "usage": {
+    "gpt-6-luna": {
+      "input_tokens": 20387,
+      "output_token_details": {
+        "reasoning": 31
+      },
+      "output_tokens": 96,
+      "input_token_details": {
+        "cache_read": 0,
+        "cache_creation": 0
+      },
+      "total_tokens": 20483
+    }
+  }
+}

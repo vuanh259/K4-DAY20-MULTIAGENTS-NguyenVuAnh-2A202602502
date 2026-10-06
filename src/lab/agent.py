@@ -4,12 +4,13 @@ Pseudo-code: guides/pseudocode/01_agent.md
 Kiểm tra:    pytest tests/test_02_agent.py
 """
 from pathlib import Path
+import os
+import sys
 
-# TODO 1: import các thành phần cần dùng, ví dụ:
-#   from deepagents import create_deep_agent
-#   from deepagents.backends import LocalShellBackend
-#   from .model import make_model
-#   from .subagents import get_subagents
+from deepagents import create_deep_agent
+from deepagents.backends import LocalShellBackend
+from .model import make_model
+from .subagents import get_subagents
 
 # ---- CÓ SẴN, KHÔNG SỬA: system prompt dùng chung cho mọi sinh viên (để đường cơ sở so sánh được) ----
 PATHS_NOTE = (
@@ -47,7 +48,14 @@ def make_backend(sandbox: Path):
       - Tác tử chạy được lệnh shell và gọi được `python` (cần đặt PATH).
       - KHÔNG chuyển biến môi trường của bạn vào shell của tác tử (khóa API không được lộ).
     """
-    raise NotImplementedError("TODO 2: cài đặt make_backend (xem guides/pseudocode/01_agent.md)")
+    env = {
+        "PATH": os.pathsep.join([str(Path(sys.executable).parent), "/usr/local/bin", "/usr/bin", "/bin"]),
+        "HOME": str(sandbox),
+        "PYTHONDONTWRITEBYTECODE": "1",
+        "PYTHONIOENCODING": "utf-8",
+    }
+    return LocalShellBackend(root_dir=sandbox, virtual_mode=True,
+                             inherit_env=False, env=env, timeout=120)
 
 
 def build_agent(sandbox: Path, mode: str = "single", use_skills: bool = False, model=None):
@@ -64,4 +72,37 @@ def build_agent(sandbox: Path, mode: str = "single", use_skills: bool = False, m
     mode không hợp lệ -> ném ValueError.
     Trả về: đồ thị (graph) đã biên dịch, gọi bằng `.invoke({"messages": [...]})`.
     """
-    raise NotImplementedError("TODO 3: cài đặt build_agent (xem guides/pseudocode/01_agent.md)")
+    if mode not in {"single", "subagents"}:
+        raise ValueError(f"Unknown agent mode: {mode}")
+    kwargs = {}
+    prompt = BASE_PROMPT
+    if mode == "subagents":
+        kwargs["subagents"] = [{**s, "system_prompt": s["system_prompt"] + " " + PATHS_NOTE}
+                               for s in get_subagents()]
+        prompt += SUBAGENTS_NOTE
+    if use_skills:
+        kwargs["skills"] = ["/skills/"]
+        prompt += SKILLS_NOTE
+    if model is None:
+        model = make_model()
+        if os.getenv("LAB_MODEL", "").startswith("google_genai:"):
+            from langchain.chat_models import init_chat_model
+            model = init_chat_model(
+                os.environ["LAB_MODEL"], temperature=model.temperature,
+                thinking_level=os.getenv("LAB_THINKING_LEVEL", "low"),
+                timeout=float(os.getenv("LAB_MODEL_TIMEOUT", "90")),
+                max_retries=int(os.getenv("LAB_MODEL_MAX_RETRIES", "1")),
+            )
+        elif os.getenv("LAB_MODEL", "").startswith("openai:"):
+            model.use_responses_api = os.getenv("LAB_USE_RESPONSES_API", "true").lower() == "true"
+            model.reasoning = {"effort": os.getenv("LAB_REASONING_EFFORT", "low")}
+            if model.reasoning["effort"] != "none":
+                model.temperature = None
+            model.request_timeout = float(os.getenv("LAB_MODEL_TIMEOUT", "90"))
+            model.max_retries = int(os.getenv("LAB_MODEL_MAX_RETRIES", "1"))
+            model.root_client = model.root_client.with_options(timeout=model.request_timeout, max_retries=model.max_retries)
+            model.root_async_client = model.root_async_client.with_options(timeout=model.request_timeout, max_retries=model.max_retries)
+            model.client = model.root_client.chat.completions
+            model.async_client = model.root_async_client.chat.completions
+    return create_deep_agent(model=model,
+                             system_prompt=prompt, backend=make_backend(sandbox), **kwargs)

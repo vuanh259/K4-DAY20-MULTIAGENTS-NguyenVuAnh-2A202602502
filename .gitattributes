@@ -1,0 +1,4 @@
+# Keep frozen skill bytes stable when cloning on Windows or Linux.
+skills/** text eol=lf
+results/** text eol=lf
+report/** text eol=lf

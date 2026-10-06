@@ -1,0 +1,1 @@
+﻿Infrastructure pilot excluded from primary results and curator: Windows CRLF checkout mismatched the supplied LF hash of untouched original tests. Runner normalizes copied Python source line endings in the temporary sandbox; original tasks remain unchanged. code-learn is rerun under the corrected environment.

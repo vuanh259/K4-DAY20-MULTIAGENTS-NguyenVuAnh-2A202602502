@@ -1,0 +1,72 @@
+{
+  "task": "data-learn",
+  "condition": "skills-auto",
+  "role": "learn",
+  "error": null,
+  "timestamp": "2026-10-06T05:23:18.905097+00:00",
+  "skills_sha256": "e4e5386b697f49c6fa86a71e955b704a05acbe0eb414edc8de8886d8c4cd7da3",
+  "seconds": 51.3,
+  "tokens": {
+    "input": 55434,
+    "output": 1153,
+    "total": 56587
+  },
+  "tool_calls": 6,
+  "subagent_calls": 0,
+  "skills_read": 1,
+  "skills_modified": false,
+  "final_message": [
+    {
+      "type": "text",
+      "text": "Created [answer.json](/workspace/sandbox/workspace/answer.json) and [sales_cleaned.csv](/workspace/sandbox/workspace/sales_cleaned.csv). I removed 7 duplicate rows, excluded 8 distinct orders with unknown amounts, normalized regions and timestamps to UTC, and stored amounts as integer cents. The cleaned CSV contains 86 distinct orders with known amounts; its counts and format were verified.",
+      "annotations": [],
+      "id": "msg_0d044c3e0b5f35cc016ac485fa45d887d099b50892bb00680c",
+      "phase": "final_answer"
+    }
+  ],
+  "score": 0.75,
+  "passed": 6,
+  "total": 8,
+  "checks": [
+    {
+      "name": "north_q1_revenue",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "north_q1_orders",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "top_region",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "missing_amount_orders",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "duplicate_rows_removed",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "rule_money_in_cents",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "rule_meta_block",
+      "passed": false,
+      "detail": "RULE: answer.json has an object `meta` = {\"source\": <input file name>, \"rows_in\": <number of data rows in the input file, duplicates included>, \"rows_used\": <number of distinct orders with a known amount>}."
+    },
+    {
+      "name": "rule_clean_csv",
+      "passed": false,
+      "detail": "RULE: write workspace/clean.csv with the header order_id,timestamp_utc,region,amount_cents; one row per distinct order with a known amount; timestamp_utc as YYYY-MM-DDTHH:MM:SSZ (UTC); region in canonical spelling (North, South, East, West); amount in integer cents."
+    }
+  ]
+}

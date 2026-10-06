@@ -1,0 +1,1 @@
+﻿Curator attempt 1 produced two valid skills; csv-to-answer-json was rejected by provided validation (evaluation marker: orders). Valid output preserved without editing. A permitted rerun requests generic record terminology to avoid marker collisions. Not part of the final skills/auto set.
